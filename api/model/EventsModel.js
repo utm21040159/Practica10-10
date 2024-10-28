@@ -1,7 +1,14 @@
 import { Schema, model } from "mongoose";
 
 const EventSchema = new Schema([
+    
     {
+        nombre: { type: String, required: true }
+    },
+    
+    {
+
+        
         metrics:[
             {
                 descripcion:{
@@ -15,6 +22,11 @@ const EventSchema = new Schema([
             }
         ]
     },
+
+    {
+        max_round: { type: Number, required: true }
+    },
+    
     {
         round:{
             type:Number,
@@ -42,4 +54,4 @@ const EventSchema = new Schema([
 
 ]);
 
-export const EventModel = model("events",EventModel)
+export const EventsModel = model("events",EventSchema)

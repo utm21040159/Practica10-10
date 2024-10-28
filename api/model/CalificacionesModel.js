@@ -9,8 +9,8 @@ const CalifSchema = new Schema ([
     },
 
     {
-        id_ronda:{
-            type:Schema.Types.ObjectId,
+        ronda:{
+            type:Number,
             required:true
         }
     },
@@ -26,6 +26,20 @@ const CalifSchema = new Schema ([
         Calificacion:[
             {
                 id_metricas:{
+                    type:Schema.Types.ObjectId,
+                    required:true
+                }
+            },
+
+            {
+                grade:{
+                    type:Number,
+                    required: true
+                }
+            },
+
+            {
+                id_judge:{
                     type:Schema.Types.ObjectId,
                     required:true
                 }

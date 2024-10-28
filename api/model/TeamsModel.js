@@ -9,31 +9,26 @@ const TeamsSchema = new Schema ([
     },
 
     {
-        Participantes:[
-            {
-                type:Schema.Types.ObjectId
-
-            }
-        ]
+        Participantes:[]
     },
 
     {
         Lider:{
-            type:Schema.type.ObjectId
+            type:Schema.type.ObjectId,
+            required: true
         }
     },
 
     {
         Ronda:{
-            type:Number
+            type:Number,
+            required: true
         }
     },
 
     {
-        Calificacion:{
-            type:Schema.type.ObjectId
-        }
+        Calificacion:[]
     }
 ])
 
-export const TeamsModel = model ("Teams", TeamsModel);  
+export const TeamsModel = model ("Teams", TeamsSchema);  
