@@ -40,3 +40,4 @@ app.post("/event/create", EventsController.createEvent)
 
 //Teams
 app.post("/team/create", TeamsControllers.createTeam)
+app.post("/team/EveRegister", TeamsControllers.eventRegister)
