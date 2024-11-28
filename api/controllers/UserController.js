@@ -9,7 +9,7 @@ export default {
 
             const hash = await bcrypt.hash(req.body.contraseña,10)
             const user = {
-                nombre:req.body.name,
+                nombre:req.body.nombre,
                 contraseña:hash,
                 correo: req.body.correo,
                 curp:req.body.curp,
@@ -43,7 +43,7 @@ export default {
         }
 
         const load = {id: user.id, correo: user.correo}
-        const token = await jwt.sign(load,process.env.PRIVATE_KEY);
+        const token = await jwt.sign(JSON.stringify(user),process.env.PRIVATE_KEY);
 
         return res.status(200).json({token})
 
@@ -67,7 +67,7 @@ export default {
         user.correo = req.body.correo ? req.body.correo : user.correo
             user.curp = req.body.curp ? req.body.curp : user.curp
             user.rol = req.body.rol ? req.body.rol : user.rol
-            user.contraseña = req.body.contraseña ? await bcrypt.hash(req.body.contraseña, 10) : user.contraseña
+            user.contraseña = req.body.contraseña ? await bcrypt.hash(req.body.contraseña,10) : user.contraseña
 
         await UsuariosModel.findByIdAndUpdate(user._id, user);
 

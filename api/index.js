@@ -31,9 +31,9 @@ app.listen(4000,()=>{
     console.log("Servidor corriendo")
 })
 
-app.post("user/register", UserController.register)
-app.post("user/login", UserController.login)
-app.put("user/update-profile/:id", UserController.updateProfile)
+app.post("/user/register", UserController.register)
+app.post("/user/login", UserController.login)
+app.put("/user/update-profile/:id", UserController.updateProfile)
 
 //Evento
 app.post("/event/create", EventsController.createEvent)

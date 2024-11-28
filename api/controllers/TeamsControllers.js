@@ -1,5 +1,5 @@
-import { TeamsModel } from "../models/TeamsModel.js"
-import { EventsModel } from "../models/EventsModel.js"
+import { TeamModel } from "../model/TeamsModel.js"
+import { EventsModel } from "../model/EventsModel.js"
 
 export default {
     createTeam: async (req, res) => {
@@ -11,7 +11,7 @@ export default {
                 lider: req.body.id_lider
             }
 
-            await TeamsModel.create(team)
+            await TeamModel.create(team)
             return res.status(200).json({ "status": "todo bien al crear el equipo" })
 
         } catch (err) {
@@ -25,7 +25,7 @@ export default {
         try {
 
             const id_team = req.params.id
-            const team = await TeamsModel.findById({ id_team })
+            const team = await TeamModel.findById({ id_team })
             if (!team) return res.status(500).json({ "status": "no existe el equipo" })
 
             const id_event = req.params.id_event

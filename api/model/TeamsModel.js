@@ -14,7 +14,7 @@ const TeamsSchema = new Schema ([
 
     {
         Lider:{
-            type:Schema.type.ObjectId,
+            type:Schema.Types.ObjectId,
             required: true
         }
     },
@@ -31,4 +31,4 @@ const TeamsSchema = new Schema ([
     }
 ])
 
-export const TeamsModel = model ("Teams", TeamsSchema);  
+export const TeamModel = model ("Teams", TeamsSchema);  
