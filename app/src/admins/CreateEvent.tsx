@@ -1,109 +1,133 @@
-import { useState } from "react";
-import { Card, Col, Row, Container, Form, Button } from "react-bootstrap";
-import Swal from "sweetalert2";
-import axios from "axios";
+import axios from 'axios';
+import React, { useState } from 'react'
+import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
+import { Trash } from 'react-bootstrap-icons';
+import Swal from 'sweetalert2';
+import { IEvent } from '../Types';
 
 
-interface Event {
-    nombre: string;
-    metrics: [0];
-    max_round: number;
-}
 
 export const CreateEvent = () => {
-
-    const [event, setEvent] = useState<Event>({
-
+    const emptyMetric = {
+        descripcion: "",
+        max_point: 0
+    }
+    const [event, setEvent] = useState<IEvent>({
         nombre: "",
-        metrics: [0],
-        max_round: 0
+        max_round: 0,
+        metrics: [emptyMetric]
+    })
 
-    });
 
-    const agregarMetric = () => {
-        const add = event;
-        add.metrics.push();
-        setEvent({ ...add })
+    const onChangeBasicFields = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault()
+        const data:any = event;
+        data [e.target.name] = e.target.value;
+        setEvent({...data})
+    }
+    
+    const onChangeMetrics = (e: React.ChangeEvent<HTMLInputElement>, i:number) => {
+        e.preventDefault()
+        const data:any = event;
+        data.metrics[i][e.target.name] = e.target.value;
+        setEvent({...data})
     }
 
-    // const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     e.preventDefault()
-    //     const tempoEvent: any = event;
-    //     tempoEvent[e.target.name] = e.target.value;
-    //     setevent(tempoEvent)
-    // }
+    const addMetric = () => {
+        const data = event;
+        data.metrics.push(emptyMetric);
+        setEvent({ ...data })
+    }
+
+    const removeMetric = (iM: number) =>{
+        const data = event;
+        const metricsFiltered = data.metrics.filter((_,i) => i != iM)
+        data.metrics = metricsFiltered;
+        setEvent({...data})
+    }
+
 
     const onSumbit = async () => {
         try {
-            Swal.fire("Guardando datos");
-            Swal.showLoading();
-
-            await axios.post("http://localhost:4000/event/create", event)
-            Swal.fire("Datos Guardados Correctamnete")
-        } catch (error: any) {
-            console.log(error)
-            Swal.fire("Algo salio mal", error.response.event.msg);
+           await axios.post("http://localhost:4000/event/create", event)
+           Swal.fire("Evento registrado con exito", "", "error")
+           console.log(event);
+        } catch (error) {
+            Swal.fire("Ocurrio un Error", "", "error")
+            console.log(error);
         }
+        
     }
 
     return (
-        <Container >
-            <Card style={{ margin: "auto" }}
-            >
+        <Container>
+            <Card className='m-3'>
                 <Card.Body>
-                    <Card.Title > EVENTO </Card.Title>
-                    <Row>
-                        <Col>
-                            <Form.Group >
-                                <Form.Label>Nombre:</Form.Label>
-                                <Form.Control className="mb-5" name="nombre" ></Form.Control>
-                            </Form.Group>
-                        </Col>
-
-
-                        <Col>
-                            <Form.Group>
-                                <Form.Label>Maximo de Rondas:</Form.Label>
-                                <Form.Control type="" className="mb-8" name="max_round" ></Form.Control>
-                            </Form.Group>
-                        </Col>
-                    </Row>
-
-                        <Row className="mb-8">
-                            <Card.Title className="text-center "> METRICAS </Card.Title>
-                        </Row>
-
-                        <Row className="text-center">
+                    <Card.Title>Crear evento</Card.Title>
+                    <Form>
+                        <Row className='mb-3'>
                             <Col>
-                                <Form.Group >
-                                    <Form.Label>Descripcion:</Form.Label>
-                                    <Form.Control className="mb-5" name="correo" ></Form.Control>
+                                <Form.Group>
+                                    <Form.Label>Titulo del evento</Form.Label>
+                                    <Form.Control 
+                                    onChange={onChangeBasicFields}
+                                    name="nombre" />
                                 </Form.Group>
                             </Col>
-
                             <Col>
-                                <Form.Group >
-                                    <Form.Label>Maximo de Puntos :</Form.Label>
-                                    <Form.Control className="mb-5" name="correo" ></Form.Control>
+                                <Form.Group>
+                                    <Form.Label>Numero de rondas</Form.Label>
+                                    <Form.Control 
+                                     onChange={onChangeBasicFields}
+                                    name="max_round" type='number' />
                                 </Form.Group>
                             </Col>
-                                
                         </Row>
+                        <Row>
+                            <Form.Group className='text-center'>
+                                <Form.Label>Metricas:</Form.Label>
+                                {
+                                    event.metrics.map((metric, i) => (
+                                        <Row className='mb-3' key={i}>
+                                            <Col>
+                                                <Form.Label>Descripción:</Form.Label>
+                                                <Form.Control 
+                                                onChange={(e:any)=>onChangeMetrics(e,i)}
+                                                name="descripcion" />
+                                            </Col>
+                                            <Col>
+                                                <Form.Label>Calificación maxima:</Form.Label>
+                                                <Form.Control 
+                                                onChange={(e:any)=>onChangeMetrics(e,i)}
+                                                type='number' name="max_point" />
+                                            </Col>
 
-                <Row className="text-center ">
-                    <Col>
-                        <Button className="m-3" onClick={() => agregarMetric()}> Agregar Metrica </Button>
-                    </Col>
-                </Row>
-                <Row className="text-center ">
-                    <Col>
-                        <Button className="m-3" onClick={() => onSumbit()}> Guardar</Button>
-                    </Col>
-                </Row>
-                
-            </Card.Body>
-        </Card>
-        </Container >
-    )
+                                            {
+                                                event.metrics.length > 1 && (
+                                                    <Col xs={1}>
+                                                <Button variant='danger' onClick={()=>removeMetric(i)}>
+                                                    <Trash></Trash>
+                                                </Button>
+                                            </Col>
+                                                )
+                                            }
 
+                                            
+                                        </Row>
+                                    ))
+                                }
+                                <div className='text-center'>
+                                    <Button variant='info' onClick={() => addMetric()}>Agregar metrica</Button>
+                                </div>
+                            </Form.Group>
+                        </Row>
+                        <hr></hr>
+                        <div className='text-center'>
+                            <Button onClick={()=>onSumbit()}>Guardar evento</Button>
+                        </div>
+                    </Form>
+                </Card.Body>
+            </Card>
+        </Container>
+    )
 }

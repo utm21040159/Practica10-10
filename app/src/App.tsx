@@ -4,6 +4,7 @@ import {Login} from './components/Login';
 import {createBrowserRouter, RouterProvider,} from "react-router-dom";
 import { RegisterParticipant } from './components/RegisterParticipant';
 import { CreateEvent } from './admins/CreateEvent';
+import { RegisterTeam } from './components/RegisterTeam';
 
 
 const router = createBrowserRouter([
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
   {
     path: "/event",
     element: < CreateEvent/>,                                                         
+  },
+  {
+    path: "/team",
+    element: <RegisterTeam/>,                                                         
   },
 ]);
 

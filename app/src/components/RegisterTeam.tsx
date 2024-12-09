@@ -2,19 +2,19 @@ import React, { useState } from "react";
 import { Card, CardBody, Container, Form, Button } from "react-bootstrap";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { IUser } from "../Types";
+import { ITeams } from "../Types";
 
 
 
-export const RegisterParticipant = () => {
+export const RegisterTeam = () => {
 
-    const [data, setData] = useState<IUser>({
+    const [data, setData] = useState<ITeams>({
 
         nombre: "",
-        correo: "",
-        contraseña: "",
-        curp: "",
-        rol: "participantes"
+        Participantes:  [],
+        Lider: "",
+        Ronda: 0 ,
+        Calificacion: []
 
     });
 
@@ -29,11 +29,9 @@ export const RegisterParticipant = () => {
         try {
             Swal.fire("Guardando datos");
             Swal.showLoading();
-            if (data) {
-                data["rol"] = "participantes";
-            }
+            
 
-            await axios.post("http://localhost:4000/user/register", data)
+            await axios.post("http://localhost:4000/team/create", data)
             Swal.fire("Datos Guardados Correctamnete")
         } catch (error: any) {
             console.log(error)
@@ -52,18 +50,17 @@ export const RegisterParticipant = () => {
                             <Form.Control name="nombre" onChange={onChange} />
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>Correo:</Form.Label>
-                            <Form.Control name="correo" onChange={onChange} />
+                            <Form.Label>Participantes:</Form.Label>
+                            <Form.Control name="Participantes" onChange={onChange} />
+                            <Form.Control name="Participantes" onChange={onChange} />
+                            <Form.Control name="Participantes" onChange={onChange} />
+                            <Form.Control name="Participantes" onChange={onChange} />
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>Contraseña:</Form.Label>
-                            <Form.Control type="password" name="contraseña" onChange={onChange} />
+                            <Form.Label>Lider:</Form.Label>
+                            <Form.Control  name="Lider" onChange={onChange} />
                         </Form.Group>
-                        <Form.Group>
-                            <Form.Label>CURP:</Form.Label>
-                            <Form.Control name="curp" onChange={onChange} />
-                        </Form.Group>
-                        
+                                               
                         <Button onClick={() => onSumbit()}>ENVIAR</Button>
                     </Form>
                 </Card.Body>

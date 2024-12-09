@@ -1,7 +1,7 @@
 import { EventsModel } from "../model/EventsModel.js"
 
 
-const validateEvent =(metrics,nombre,max_Round)=>{
+const validateEvent =(metrics,nombre,max_round)=>{
     const data ={
         isValid:false,
         msg:""
@@ -18,13 +18,9 @@ const validateEvent =(metrics,nombre,max_Round)=>{
      }
 
      
+     const incompleted_metrics = metrics.filter((metric) => (!metric.description) || (!metric.max_points))
 
-    if (metrics.length > 0 || Array.isArray(metrics)) 
-        return res.status(400).json({ "status": "informacion incompleta" })
-        if (req.body.max_round > 0) 
-            return res.status(400).json({ "status": "informacion incompleta" })
-    
-        const incompleted_metrics = metrics.filter((metric) => (!metric.description) || (!metric.max_points))
+       
         if (incompleted_metrics.length > 0) {
             data.msg = "Alguna metrica esta vacia"
             return data
@@ -32,8 +28,8 @@ const validateEvent =(metrics,nombre,max_Round)=>{
             
         const invalidMetrics = metrics.filter(
             (metric) =>
-                metric.descirpcion.trim().length === 0 || metric.max_points <= 0
-        );
+                metric.descirpcion.length === 0 || metric.max_points === 0);
+        
     
         if (invalidMetrics.length > 0) {
             data.msg = "alguna de las metricas es invalida"
@@ -60,15 +56,15 @@ const validateEvent =(metrics,nombre,max_Round)=>{
 export default {
     createEvent: async (req, res) => {
         try {
-            const {metrics,nombre,max_Round}= req.body
-           const data = validateEvent(metrics, nombre, max_Round)
+            const {metrics,nombre,max_round}= req.body
+           const data = validateEvent(metrics, nombre, max_round)
            if(!isValid){
             return res.status(400).json({msg})
            }
             const event = {
                 nombre: req.body.nombre,
                 metrics: metrics,
-                max_round: req.body.max_Round
+                max_round: req.body.max_round
             }
 
             await EventsModel.create(event)
@@ -89,8 +85,8 @@ export default {
         if(!event){
             return res.status(400).json({msg: "Elevento no existe"})
         }
-        const {metrics,nombre,max_Round}= req.body
-           const data = validateEvent(metrics, nombre, max_Round)
+        const {metrics,nombre,max_round}= req.body
+           const data = validateEvent(metrics, nombre, max_round)
            if(!isValid){
             return res.status(400).json({msg})
            }
@@ -98,7 +94,7 @@ export default {
             $set:{
                 metrics,
                 nombre,
-                max_Round
+                max_round
             }
            })
         } catch (error) {
